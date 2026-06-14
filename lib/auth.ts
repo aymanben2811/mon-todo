@@ -1,9 +1,28 @@
 import { supabase } from "./supabase";
 
 // Crée un nouveau compte utilisateur
-export async function signUp(email: string, password: string) {
-  const { data, error } = await supabase.auth.signUp({ email, password });
+export async function signUp(
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string
+) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { first_name: firstName, last_name: lastName },
+    },
+  });
   if (error) throw error;
+
+  // Envoie l'email de bienvenue sans bloquer l'inscription en cas d'échec
+  fetch("/api/welcome-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, firstName }),
+  }).catch(() => {});
+
   return data;
 }
 

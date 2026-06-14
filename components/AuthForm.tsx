@@ -9,6 +9,8 @@ export default function AuthForm() {
   const [mode, setMode] = useState<Mode>("connexion");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -23,7 +25,7 @@ export default function AuthForm() {
       if (mode === "connexion") {
         await signIn(email, password);
       } else {
-        await signUp(email, password);
+        await signUp(email, password, firstName, lastName);
         setMessage("Vérifiez vos emails pour confirmer votre inscription.");
       }
     } catch (err) {
@@ -56,6 +58,26 @@ export default function AuthForm() {
         </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          {mode === "inscription" && (
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Prénom"
+                required
+                className="flex-1 rounded-lg border border-zinc-200/80 bg-white/80 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-violet-400 dark:border-zinc-700/60 dark:bg-zinc-800/60 dark:text-zinc-50"
+              />
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Nom"
+                required
+                className="flex-1 rounded-lg border border-zinc-200/80 bg-white/80 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-violet-400 dark:border-zinc-700/60 dark:bg-zinc-800/60 dark:text-zinc-50"
+              />
+            </div>
+          )}
           <input
             type="email"
             value={email}
